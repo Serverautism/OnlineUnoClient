@@ -98,6 +98,8 @@ class MainScene:
         deck_pos = (1335, 480)
         self.deck = menu.Button(deck_pos, deck_image)
 
+        self.warnings = []
+
         self.discard_pos = (1015, 447)
         self.discard_render = pygame.Surface((314, 258))
         self.discard_render.set_colorkey('black')
@@ -374,6 +376,8 @@ class MainScene:
 
         self.render_cards()
 
+        self.update_warnings()
+
     def handle_input(self, input):
         for event in input:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -409,9 +413,25 @@ class MainScene:
     def update_start_button(self):
         if self.is_host and not self.game_started:
             self.start_button.render(self.render_surface)
-            if self.start_button.get_pressed() and len(self.players) > 1:
-                self.send('start')
-                self.game_started = True
+            if self.start_button.get_pressed():
+                if len(self.players) > 1:
+                    self.send('start')
+                    self.game_started = True
+                else:
+                    self.warnings.append(warning.WarningBox((self.render_width - 360 - 10, 10), message='wait for at least one more player!', uptime=5))
+
+    def update_warnings(self):
+        if len(self.warnings) > 0:
+            to_remove = []
+            for item in self.warnings:
+                if item.dead:
+                    to_remove.append(item)
+                else:
+                    item.update()
+                    item.render(self.render_surface)
+
+            for item in to_remove:
+                self.warnings.remove(item)
 
     def distribute_spots(self):
         if len(self.players) > 1:
