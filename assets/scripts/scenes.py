@@ -1,8 +1,10 @@
-import pygame
+import random
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
-import random
-from . import menu, cards, player, chat
+
+import pygame
+
+from . import menu, cards, player, chat, warning
 
 
 class MainMenuScene:
@@ -633,7 +635,7 @@ class SelectGameScene:
             pygame.image.load('assets/images/select_game_border_2.png').convert_alpha(),
             pygame.image.load('assets/images/select_game_border_3.png').convert_alpha(),
             pygame.image.load('assets/images/select_game_border_4.png').convert_alpha()
-            ]
+        ]
         self.refresh_image = pygame.image.load('assets/images/refresh.png').convert_alpha()
         refresh_pos = (self.render_width - self.refresh_image.get_width() - 30, self.render_height - self.refresh_image.get_height() - 30)
         self.refresh_button = menu.Button(refresh_pos, self.refresh_image)
