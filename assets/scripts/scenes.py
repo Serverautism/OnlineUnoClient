@@ -211,6 +211,7 @@ class MainScene:
                             self.is_host = True
 
                     elif command == 'start':
+                        self.reset()
                         self.game_started = True
                         print('host started the game...')
 
@@ -231,7 +232,7 @@ class MainScene:
                         self.has_wished = False
 
                     elif command.startswith('win'):
-                        self.reset()
+                        self.end_game()
                         id = int(command.split(',')[1])
                         if id != self.id:
                             print('player {} won!'.format(self.players[id].name))
@@ -579,6 +580,12 @@ class MainScene:
             player.cards = 0
 
         print('game reset done...')
+
+    def end_game(self):
+        self.game_started = False
+        self.cards.clear()
+
+        print('game ended...')
 
     def create_game(self):
         self.send(self.name + '\0create')
