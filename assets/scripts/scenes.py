@@ -98,6 +98,7 @@ class MainScene:
         deck_pos = (1335, 480)
         self.deck = menu.Button(deck_pos, deck_image)
 
+        self.warning_pos = (self.render_width - 360 - 10, 10)
         self.warnings = []
 
         self.discard_pos = (1015, 447)
@@ -215,6 +216,10 @@ class MainScene:
                             self.is_host = True
 
                     elif command == 'start':
+                        if self.game_started:
+                            print('game got reset...')
+                            self.warnings.append(warning.WarningBox(self.warning_pos, 'game got restarted because a player left mid-game', 5))
+
                         self.reset()
                         self.game_started = True
                         print('host started the game...')
@@ -416,9 +421,8 @@ class MainScene:
             if self.start_button.get_pressed():
                 if len(self.players) > 1:
                     self.send('start')
-                    self.game_started = True
                 else:
-                    self.warnings.append(warning.WarningBox((self.render_width - 360 - 10, 10), message='wait for at least one more player!', uptime=5))
+                    self.warnings.append(warning.WarningBox(self.warning_pos, message='wait for at least one more player!', uptime=5))
 
     def update_warnings(self):
         if len(self.warnings) > 0:
